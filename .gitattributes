@@ -1,0 +1,14 @@
+* text=auto
+*.py text eol=lf
+*.md text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.ipynb text eol=lf
+*.txt text eol=lf
+*.png binary
+
+# Preserve the exact upstream snapshot bytes recorded in data/source.json.
+data/train.csv -text
+data/README.md -text
+data/LICENSE -text

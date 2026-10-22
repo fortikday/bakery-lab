@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Bakery Lab — Daily waste log</title>
+  <style>
+    :root{--ink:#193e31;--muted:#6f7c72;--green:#235d45;--pale:#eaf1e9;--orange:#c67b42;--paper:#f6f6f0;--white:#fffefa;--line:#dfe5d9;--red:#a54f43}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:14px;line-height:1.55}a{color:var(--green)}button,input,select,textarea{font:inherit}button,a,input,select,textarea{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--green)}button{cursor:pointer}button:disabled{cursor:wait;opacity:.55}button:disabled:hover{background:inherit}[hidden]{display:none!important}
+    .sidebar{position:fixed;inset:0 auto 0 0;width:224px;padding:34px 22px;background:#eef1e8;border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:3}.brand{display:flex;gap:11px;align-items:center;font-size:22px;font-weight:750;letter-spacing:-.8px;text-decoration:none;color:var(--ink)}.brand-icon{width:38px;height:38px;border:1px solid #bcccb6;border-radius:12px;display:grid;place-items:center;background:#f8f9f1}.brand svg{width:23px;height:23px;stroke:var(--green);fill:none;stroke-width:1.4}.brand small{display:block;color:var(--muted);font-size:9px;font-weight:600;letter-spacing:2px;margin-top:2px}.nav-label{margin:48px 12px 12px;font-size:9px;letter-spacing:1.9px;font-weight:700;color:#7d887b}.nav{display:grid;gap:7px}.nav a{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:9px;font-size:13px;text-decoration:none;color:#647561}.nav a:hover{background:#e2e9db}.nav a.active{background:var(--green);color:white}.nav svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;flex-shrink:0}.sidebar-bottom{margin-top:auto;border-top:1px solid #d9dfcf;padding:19px 12px 0;font-size:11px}.sidebar-bottom p{color:var(--muted);margin:7px 0 0}.dot{display:inline-block;width:7px;height:7px;background:#68936c;border-radius:50%;margin-right:7px}
+    main{margin-left:224px;padding:30px 42px 34px;max-width:1580px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:33px;color:var(--muted);font-size:10px;letter-spacing:1.5px;text-transform:uppercase}.badge{font-size:10px;letter-spacing:.3px;text-transform:none;padding:6px 10px;background:#e7ede2;border:1px solid #d4dfcd;border-radius:20px;color:#55734d}.hero{display:flex;justify-content:space-between;gap:28px;align-items:flex-end;margin-bottom:25px}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:#7b8b6e;margin:0 0 10px}.hero h1{font-family:Georgia,"Times New Roman",serif;font-size:43px;line-height:1.15;letter-spacing:-1.2px;font-weight:400;margin:0 0 12px}.hero p{color:var(--muted);font-size:13px;max-width:640px;line-height:1.8;margin:0}.hero-note{font-size:11px;color:#71816a;max-width:190px;border-left:2px solid #c9d7bd;padding-left:14px;flex-shrink:0}.hero-note strong{display:block;color:var(--green);font-size:12px;margin-bottom:4px}
+    .notice{padding:14px 17px;border:1px solid #e4d8c4;background:#faf0df;border-radius:9px;color:#806645;font-size:12px;margin-bottom:18px}.notice p{margin:5px 0 0}.notice code{background:#fff8eb;padding:2px 5px;border-radius:3px}.notice.error{background:#fcf0e9;border-color:#e9ccbf;color:#914e3b}.status{padding:13px 16px;border-radius:8px;background:#eaf2e5;border:1px solid #cfdfc6;color:#42653b;font-size:12px;margin:0 0 18px}.status button{font-size:12px;border:0;background:transparent;color:inherit;text-decoration:underline;font-weight:650;margin-left:8px}
+    .entry-layout{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(230px,1fr);gap:21px;align-items:start}.card{background:var(--white);border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 30px #223b2409}.entry-card{padding:25px 27px}.card-heading{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:20px}.card-heading h2{font-size:17px;font-weight:650;letter-spacing:-.3px;margin:0}.card-heading p{color:var(--muted);font-size:11px;margin:5px 0 0}.tag{font-size:10px;color:#6a8060;border-radius:5px;background:#eef3e8;padding:5px 8px;white-space:nowrap}.kind-switch{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:#f0f3e9;padding:5px;border:1px solid #dfe6d6;border-radius:9px;margin-bottom:23px}.kind-switch button{border:0;border-radius:6px;padding:11px 9px;background:transparent;color:#788970;font-size:12px;text-align:left;display:flex;gap:9px;align-items:center;justify-content:center}.kind-switch button[aria-pressed="true"]{background:var(--white);color:var(--ink);box-shadow:0 2px 6px #203b2410;font-weight:650}.kind-switch svg{height:16px;width:16px;fill:none;stroke:currentColor;stroke-width:1.6}
+    fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-size:11px;font-weight:650;letter-spacing:.6px;color:#6d8063;padding:0;margin:0 0 13px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field{min-width:0}.field.full{grid-column:1/-1}label{display:block;color:#52674b;font-size:11px;font-weight:650;margin-bottom:6px}.optional{color:#8b9685;font-weight:400}input,select,textarea{width:100%;background:#fffefa;border:1px solid #d4ddcc;border-radius:7px;padding:10px 11px;color:var(--ink);min-height:42px;font-size:12px}input::placeholder,textarea::placeholder{color:#a1ac9b}textarea{resize:vertical;min-height:77px;line-height:1.7}input:disabled,select:disabled{background:#f4f5ef;color:#929c8a}.hint{color:#8b9584;font-size:10px;margin:6px 0 0;line-height:1.65}.divider{height:1px;background:#e7ebdf;margin:22px 0}.counts-note{font-size:11px;color:#74856a;margin:0 0 14px}.reconcile{padding:11px 13px;border:1px solid #dce5d1;border-radius:7px;background:#f0f5ea;color:#5f7a50;font-size:11px;line-height:1.7;margin:15px 0 0}.reconcile.invalid{background:#fff2e9;color:#995f40;border-color:#ead5c4}.reconcile strong{display:block;font-weight:650}.timing{background:#f5f6ee;border:1px solid #e6eadc;border-radius:9px;padding:15px 16px;margin-top:18px}.timing h3{font-size:12px;margin:0 0 4px}.timing>p{font-size:10px;color:#7b8971;margin:0 0 12px;line-height:1.7}.cost-section{margin-top:20px}.form-actions{display:flex;align-items:center;gap:12px;margin-top:22px;padding-top:20px;border-top:1px solid #e5eadc}.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;border:1px solid #cad6c1;background:var(--white);color:var(--ink);border-radius:7px;padding:10px 15px;font-size:11px;font-weight:650;white-space:nowrap}.button:hover{background:#eef3e7}.button.primary{background:var(--green);border-color:var(--green);color:white}.button.primary:hover{background:#1b4b37}.button.small{padding:7px 11px;font-size:10px}.button svg{height:14px;width:14px;stroke:currentColor;fill:none;stroke-width:1.7}.form-actions .hint{margin:0 0 0 auto;max-width:225px;text-align:right}.text-button{border:0;background:transparent;font-size:11px;color:var(--green);padding:5px 0;text-decoration:underline;text-underline-offset:3px}
+    .side-card{padding:23px 22px}.side-card h3{font-size:14px;margin:0 0 15px}.side-card p{font-size:11px;line-height:1.85;color:var(--muted);margin:0 0 13px}.side-card strong{color:#4c6842;font-weight:650}.side-card .step{display:flex;gap:11px;margin-top:16px}.step-number{display:grid;place-items:center;background:#edf2e6;border:1px solid #dce5d3;color:#81966d;border-radius:7px;width:24px;height:24px;flex-shrink:0;font-size:10px;font-weight:700}.step h4{font-size:11px;font-weight:650;margin:1px 0 4px}.step p{font-size:10px;line-height:1.8;margin:0}.side-note{background:#f5ecdd;border:1px solid #e8ddc9;border-radius:11px;padding:18px 20px;margin-top:17px;font-size:11px;color:#877357;line-height:1.8}.side-note h3{font-size:12px;margin:0 0 7px;color:#6c593f}.side-note p{margin:0}.key{padding-top:17px;margin-top:17px;border-top:1px solid #e4eadb;display:flex;gap:7px;align-items:center;color:#8a9681;font-size:10px}.key svg{height:13px;width:13px;stroke:currentColor;fill:none;stroke-width:1.5}
+    #report{margin-top:37px;scroll-margin-top:24px}.section-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:18px}.section-heading h2{font-family:Georgia,"Times New Roman",serif;font-size:29px;letter-spacing:-.6px;font-weight:400;margin:0 0 5px}.section-heading p{font-size:11px;color:var(--muted);margin:0}.report-toolbar{display:flex;align-items:flex-end;gap:11px;background:#eef2e8;border:1px solid #dce5d3;border-radius:10px;padding:15px 17px;margin-bottom:18px}.report-toolbar .field{min-width:150px}.report-toolbar .store-filter{flex:1}.report-toolbar label{font-size:10px}.week-controls{display:flex;gap:5px;align-items:center}.week-controls input{max-width:154px;background:var(--white)}.arrow{width:35px;min-width:35px;height:42px;border:1px solid #d4ddcc;border-radius:7px;background:var(--white);color:var(--green);font-size:17px}.report-range{font-size:11px;color:#718567;margin-bottom:15px}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:19px}.metric{padding:18px 20px;min-height:122px}.metric .label{color:#7d8b73;font-size:10px}.metric .value{font-size:29px;letter-spacing:-1px;font-weight:600;line-height:1.25;margin-top:11px}.metric .caption{font-size:10px;color:#8f9b86;margin-top:6px}.metric.production{background:#edf2e7;border-color:#d8e2cf}.metric.production .value{color:#547347}.report-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(230px,1fr);gap:19px;margin-bottom:19px}.report-card{padding:21px 23px}.report-card h3{font-size:13px;margin:0 0 7px}.report-card>p{font-size:10px;color:#8b9782;margin:0 0 15px}.cost-list{display:grid;gap:10px}.cost-row{display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid #e9ede2;padding:8px 0;color:#76876b;font-size:11px}.cost-row strong{font-size:20px;font-weight:600;letter-spacing:-.5px;color:var(--ink)}.cost-note{font-size:10px;line-height:1.8;color:#89967f;margin-top:13px}.cost-note.warning{color:#a17748}.pill{display:inline-block;background:#eef3e7;color:#6b855a;border-radius:4px;padding:3px 7px;font-size:9px}.pill.production-pill{background:#f5ecdf;color:#9a7a52}.table-scroll{overflow:auto}.table-head{padding:20px 23px 15px;display:flex;justify-content:space-between;gap:15px;align-items:center}.table-head h3{font-size:13px;margin:0}.table-head p{font-size:10px;color:var(--muted);margin:4px 0 0}table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:11px}th{background:#f4f6ec;color:#829175;text-align:left;font-size:9px;font-weight:650;text-transform:uppercase;letter-spacing:.7px;padding:11px 15px}td{padding:12px 15px;color:#697d5c;border-top:1px solid #ebeee4;font-variant-numeric:tabular-nums}td strong{color:#35562b;font-weight:600}td .sub{display:block;font-size:9px;color:#96a08e;margin-top:3px}.row-actions{display:flex;gap:11px}.row-actions button{font-size:10px;color:var(--green);border:0;background:transparent;padding:3px 0;text-decoration:underline;text-underline-offset:3px}.row-actions button.archive{color:#9b7853}.empty{text-align:center;padding:35px 24px;background:#f8f9f3;border:1px dashed #dce5d2;border-radius:8px;color:#829075;font-size:11px;line-height:1.8}.empty strong{display:block;color:#5b754c;font-size:13px;margin-bottom:5px}.empty.small{padding:18px 12px}.table-empty{padding:35px 23px}.table-note{font-size:10px;color:#8b9780;border-top:1px solid #e3e9da;padding:13px 23px}.mini-list{display:grid;gap:10px}.mini-row{font-size:11px;padding:8px 0;border-bottom:1px solid #e8eddf}.mini-row strong{font-weight:600;color:#48683b}.mini-row span{display:block;color:#8a9880;font-size:10px;margin-top:4px}.report-empty{margin-top:8px;margin-bottom:20px}.footer{display:flex;justify-content:space-between;gap:20px;margin-top:28px;padding-top:18px;border-top:1px solid #dfe6d5;font-size:9px;color:#909d85}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}noscript{display:block;padding:25px;background:#f8e4d0;color:#714b2c}
+    .archive-toggle{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:500;margin:0;white-space:nowrap}.archive-toggle input{width:14px;height:14px;min-height:0;margin:0;accent-color:var(--green)}.archived-row{background:#f4f4ef}.archived-row td{color:#8c9585}.archived-label{display:block;font-size:9px;color:#9a825f;margin-top:4px}
+    #import{margin-top:37px;scroll-margin-top:24px}.import-layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(230px,1fr);gap:19px;align-items:start}.import-card{padding:23px 25px}.import-card p{font-size:11px;color:var(--muted);line-height:1.8;margin:7px 0 16px}.import-card h3{font-size:14px;margin:0}.file-select{padding:18px;border:1px dashed #cbd7c0;border-radius:9px;background:#f5f7ef;margin-top:17px}.file-select label{font-size:12px;margin-bottom:9px}.file-select input{font-size:11px;background:var(--white);padding:9px;max-width:100%}.file-select .hint{margin:8px 0 0}.import-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}.import-links{display:flex;flex-wrap:wrap;gap:9px 17px;margin-top:13px}.import-links a{font-size:11px;text-underline-offset:3px}.import-guide{padding:22px;background:#f0f3e8;border:1px solid #dce5d2;border-radius:11px;font-size:11px;color:#7a896f;line-height:1.85}.import-guide h3{font-size:13px;margin:0 0 10px;color:#4d6940}.import-guide ol{padding-left:19px;margin:0 0 12px}.import-guide li{margin:7px 0}.import-guide details{border-top:1px solid #dbe3d1;padding-top:12px;margin-top:14px}.import-guide summary{cursor:pointer;color:#557148;font-weight:600}.import-guide code{font-size:10px;background:#fafbf6;padding:1px 4px;border-radius:3px;overflow-wrap:anywhere}.import-preview{margin-top:20px}.import-preview-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:20px 23px 17px}.import-preview-head h3{font-size:14px;margin:0}.import-preview-head p{font-size:11px;color:var(--muted);margin:5px 0 0;line-height:1.7}.import-preview .table-scroll{max-height:360px}.import-errors{margin:0 23px 17px;padding:12px 15px;background:#fcf0e9;border:1px solid #e9ccbf;border-radius:7px;font-size:11px;color:#914e3b;max-height:230px;overflow:auto}.import-errors strong{display:block;margin-bottom:6px}.import-errors ul{margin:0;padding-left:18px}.import-errors li{margin:5px 0;white-space:normal}.import-footer{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:17px 23px;border-top:1px solid var(--line)}.import-footer p{font-size:10px;color:#829075;margin:0;line-height:1.7;max-width:540px}.import-row-error td{background:#fcf5ef}.import-result{margin-top:17px;margin-bottom:0}.preview-product{white-space:normal;min-width:140px}.preview-status{white-space:normal;min-width:140px;max-width:310px;font-size:10px}.comparison-card{margin:20px 0;padding:22px 24px}.comparison-heading{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.comparison-heading h3{font-size:14px;margin:0}.comparison-heading p{font-size:10px;color:var(--muted);margin:5px 0 0}.comparison-coverage{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:17px 0}.coverage-box{border:1px solid #e1e7d9;border-radius:7px;padding:12px 14px;background:#f6f7f0;color:#7c8b72;font-size:10px}.coverage-box strong{display:block;font-size:11px;color:#526c45;margin:2px 0 5px}.coverage-box span{display:block}.comparison-table th:first-child{min-width:170px}.comparison-table th:not(:first-child),.comparison-table td:not(:first-child){text-align:right}.comparison-table td{font-size:11px}.comparison-table td.change-value{color:#56664e;font-weight:550}.comparison-note{font-size:10px;color:#7f8d75;line-height:1.85;margin:14px 0 0;padding:12px 14px;border-left:2px solid #cbd7bf;background:#f5f7ef}.comparison-card .table-scroll{margin:0 -7px}.comparison-note strong{color:#64765a}.import-tag-invalid{background:#f7eade;color:#986b44}
+    @media(max-width:980px){.import-layout{grid-template-columns:1fr}.import-guide{padding:19px 22px}.import-guide ol{display:grid;grid-template-columns:1fr 1fr;gap:5px 25px;margin-bottom:0}.import-guide details{margin-top:10px}}
+    @media(max-width:640px){.import-card{padding:20px 17px}.import-guide{padding:18px}.import-guide ol{display:block}.file-select{padding:14px}.import-actions .button{width:100%}.import-preview-head{padding:18px 17px}.import-errors{margin:0 17px 16px}.import-footer{padding:16px 17px;align-items:stretch;flex-direction:column;gap:11px}.import-footer .button{width:100%}.comparison-card{padding:19px 17px}.comparison-heading{gap:10px}.comparison-heading .tag{white-space:normal;text-align:right;max-width:125px}.comparison-coverage{gap:9px}.coverage-box{padding:11px}.comparison-card .table-scroll{margin:0 -5px}.comparison-table th,.comparison-table td{padding:10px 9px}.import-preview-head .tag{white-space:normal;text-align:right;max-width:130px}}
+    @media print{#import,.comparison-heading .tag{display:none!important}.comparison-card{break-inside:avoid}}
+    @media(max-width:1180px){.sidebar{width:190px;padding:30px 16px}main{margin-left:190px;padding:26px}.brand{font-size:20px}.entry-layout{grid-template-columns:minmax(0,1.9fr) minmax(210px,1fr)}.entry-card{padding:22px}.hero h1{font-size:38px}.grid.three{gap:10px}.report-card{padding:20px}.metric{padding:17px}.form-actions .hint{max-width:180px}}
+    @media(max-width:980px){.sidebar{width:160px;padding:25px 12px}.brand{font-size:17px;gap:8px}.brand-icon{width:31px;height:31px}.brand small{font-size:7px;letter-spacing:1.5px}.nav a{font-size:11px;gap:8px;padding:11px 9px}main{margin-left:160px;padding:22px}.entry-layout{grid-template-columns:1fr}.entry-aside{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}.side-note{margin:0}.hero-note{display:none}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.report-grid{grid-template-columns:1fr}.topbar{margin-bottom:28px}.form-actions .hint{max-width:250px}.report-toolbar{flex-wrap:wrap}}
+    @media(max-width:640px){.sidebar{position:static;flex-direction:row;align-items:center;justify-content:space-between;width:auto;padding:16px 18px;border-right:0;border-bottom:1px solid var(--line)}.brand{font-size:19px}.brand small,.nav-label,.sidebar-bottom{display:none}.brand-icon{width:32px;height:32px}.nav{display:flex;gap:4px}.nav a{font-size:0;padding:10px;gap:0}.nav svg{width:19px;height:19px}main{margin-left:0;padding:21px 16px}.topbar{font-size:8px;letter-spacing:1px;gap:8px}.badge{font-size:8px;padding:5px 8px}.hero h1{font-size:35px}.hero p{font-size:12px}.entry-card{padding:20px 17px}.kind-switch button{font-size:10px;gap:6px;padding:10px 5px}.kind-switch svg{width:14px;height:14px}.grid{gap:13px}.grid.three{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card-heading h2{font-size:15px}.field input,.field select{font-size:12px}.entry-aside{grid-template-columns:1fr}.side-card{padding:21px}.form-actions{flex-wrap:wrap}.form-actions .hint{margin:0;width:100%;max-width:none;text-align:left}.timing{padding:14px}.report-toolbar{padding:14px;gap:12px}.report-toolbar .field{min-width:0}.report-toolbar .store-filter{width:100%;flex-basis:100%}.report-toolbar .button{flex:1}.week-controls input{max-width:165px}.section-heading{align-items:center}.section-heading h2{font-size:27px}.metrics{gap:10px}.metric{padding:16px;min-height:116px}.metric .value{font-size:26px}.metric .label{font-size:9px}.metric .caption{font-size:9px}.report-card{padding:19px 17px}.table-head{padding:18px 17px}th,td{padding:11px 13px}.table-note{padding:12px 17px}.footer{font-size:8px;gap:12px}.hero{margin-bottom:22px}}
+    @media print{.sidebar,.form-actions,.report-toolbar,.row-actions,.entry-layout,.hero,.topbar,.status,.notice{display:none!important}main{margin:0;padding:15px}.card{box-shadow:none;break-inside:avoid}.metrics{grid-template-columns:repeat(4,1fr)}.table-scroll{overflow:visible}.footer{display:none}}
+    @media(max-width:420px){.brand{font-size:17px;gap:7px}.brand-icon{width:29px;height:29px}.nav{gap:2px}.nav a{padding:8px}.nav svg{width:18px;height:18px}}
+  </style>
+</head>
+<body>
+  <aside class="sidebar" aria-label="Main navigation">
+    <a class="brand" href="log.html"><span class="brand-icon"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M7 12V9a7 7 0 0 1 14 0v3M5 12h18v12H5zM10 15v6m4-6v6m4-6v6"/><path d="M10 8c0-3 5-3 5 0"/></svg></span><span>bakery lab<small>SMALL STEPS. LESS WASTE.</small></span></a>
+    <div class="nav-label">YOUR WORKSPACE</div>
+    <nav class="nav">
+      <a class="active" href="log.html" aria-current="page" title="Daily log"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3H4v14h12V3h-2M7 2h6v4H7zM7 10h6m-6 3h4"/></svg>Daily log</a>
+      <a href="#import" title="Import records"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 13v4h14v-4"/></svg>Import records</a>
+      <a href="#report" title="Weekly report"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3v14h14M6 13V9m4 4V6m4 7v-3"/></svg>Weekly report</a>
+      <a href="index.html" title="Sales experiment"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3v14h14M6 12l4-4 3 2 4-6"/></svg>Sales experiment</a>
+    </nav>
+    <div class="sidebar-bottom"><strong><span class="dot"></span>Saved on this computer</strong><p>Your own entries.<br>A clearer picture of waste.</p></div>
+  </aside>
+  <main>
+    <div class="topbar"><span>Workspace / Daily waste log</span><span class="badge" id="storage-badge">Local records</span></div>
+    <section class="hero" aria-labelledby="page-title"><div><div class="eyebrow">MEASURE WHAT HAPPENED.</div><h1 id="page-title">Give every leftover<br>a clear next step.</h1><p>Record the day's sales and leftovers, note when an item sold out, and track production waste separately. Your weekly report grows with each entry.</p></div><div class="hero-note"><strong>One product. One day.</strong>Use a daily total for each product or material at each store.</div></section>
+    <div class="notice" id="connection-notice" hidden role="alert"></div>
+    <div class="status" id="status" hidden role="status" aria-live="polite"></div>
+    <section class="entry-layout" aria-label="Daily entry">
+      <article class="card entry-card">
+        <div class="card-heading"><div><h2 id="form-title">New daily entry</h2><p>Start with the product or material you want to record.</p></div><span class="tag" id="form-mode">Not yet saved</span></div>
+        <div class="kind-switch" role="group" aria-label="Entry type">
+          <button type="button" id="finished-tab" aria-pressed="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7V5a6 6 0 0 1 12 0v2M3 7h14v10H3zM7 10v4m6-4v4"/></svg>Finished products</button>
+          <button type="button" id="production-tab" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8h14c0 6-3 9-7 9S3 14 3 8zm2-3h10M8 3v2m4-2v2"/></svg>Production waste</button>
+        </div>
+        <form id="entry-form">
+          <fieldset id="common-fields">
+            <legend class="sr-only">Entry details</legend>
+            <div class="grid">
+              <div class="field"><label for="record-date">Date</label><input id="record-date" name="record_date" type="date" required></div>
+              <div class="field"><label for="store">Store</label><input id="store" name="store" list="stores-list" maxlength="80" placeholder="e.g. High Street bakery" autocomplete="organization" required></div>
+              <div class="field full"><label for="product" id="product-label">Product</label><input id="product" name="product" maxlength="100" placeholder="e.g. Croissant" required><p class="hint" id="product-hint">Use the same product name each day so the reports stay consistent.</p></div>
+            </div>
+          </fieldset>
+          <div class="divider"></div>
+          <fieldset id="finished-fields">
+            <legend>Where the finished products went</legend>
+            <p class="counts-note">Enter item counts. Sales include any items sold at a discount.</p>
+            <div class="grid three">
+              <div class="field"><label for="opening-stock">Opening stock</label><input id="opening-stock" name="opening_stock" type="number" min="0" step="1" value="0" required><p class="hint">Items carried into this day.</p></div>
+              <div class="field"><label for="produced">Baked today</label><input id="produced" name="produced" type="number" min="0" step="1" value="0" required></div>
+              <div class="field"><label for="sold">Sold</label><input id="sold" name="sold" type="number" min="0" step="1" value="0" required></div>
+              <div class="field"><label for="donated">Donated</label><input id="donated" name="donated" type="number" min="0" step="1" value="0" required></div>
+              <div class="field"><label for="discarded">Discarded</label><input id="discarded" name="discarded" type="number" min="0" step="1" value="0" required></div>
+              <div class="field"><label for="closing-stock">Closing stock</label><input id="closing-stock" name="closing_stock" type="number" min="0" step="1" value="0" required><p class="hint">Kept for a later day.</p></div>
+              <div class="field"><label for="discounted-sold">Of sold: discounted <span class="optional">optional</span></label><input id="discounted-sold" name="discounted_sold" type="number" min="0" step="1" value="0"><p class="hint">Already included in Sold.</p></div>
+            </div>
+            <div class="reconcile" id="reconciliation" role="status" aria-live="polite"><strong>All items accounted for</strong><span>Opening stock + baked = sold + donated + discarded + closing stock.</span></div>
+            <div class="timing">
+              <h3>Did this product sell out?</h3><p>Leave the times blank when unknown. A sellout time records when no saleable stock remained for the rest of the day; it does not measure missed sales.</p>
+              <div class="grid">
+                <div class="field"><label for="sold-out-at">Final sellout time <span class="optional">optional</span></label><input id="sold-out-at" name="sold_out_at" type="time"></div>
+                <div class="field"><label for="closing-time">Store closing time <span class="optional">optional</span></label><input id="closing-time" name="closing_time" type="time"><p class="hint">Same calendar day. Helps identify a sellout before closing.</p></div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset id="production-fields" hidden disabled>
+            <legend>Material discarded during production</legend>
+            <div class="grid">
+              <div class="field"><label for="waste-kg">Production waste (kg)</label><input id="waste-kg" name="waste_kg" type="number" min="0.001" step="0.001" placeholder="e.g. 1.250" required><p class="hint">Weigh the discarded material. Up to three decimal places.</p></div>
+            </div>
+            <p class="hint">Use this for excess dough, failed batches, and other production material. Do not also record the same material as discarded finished products.</p>
+          </fieldset>
+          <div class="divider"></div>
+          <fieldset id="detail-fields">
+            <legend>Reason and estimated cost</legend>
+            <div class="grid">
+              <div class="field full"><label for="reason">Primary waste reason <span class="optional" id="reason-note">required when something was discarded</span></label><select id="reason" name="reason"><option value="">Choose a reason</option value="overproduction">Overproduction</option><option value="low_demand">Low demand</option><option value="damage">Damage</option><option value="expiry">Expired shelf life</option><option value="preparation_error">Preparation error</option><option value="other">Other</option></select></div>
+              <div class="field"><label for="unit-cost"><span id="cost-label">Production cost per item</span> <span class="optional">optional</span></label><input id="unit-cost" name="unit_cost" type="number" min="0" step="0.0001" placeholder="Leave blank if unknown"><p class="hint">Production cost, rather than the selling price.</p></div>
+              <div class="field"><label for="currency">Currency code <span class="optional">if cost entered</span></label><input id="currency" name="currency" type="text" maxlength="3" pattern="[A-Za-z]{3}" placeholder="e.g. GBP" autocomplete="off"><p class="hint">Three letters. Currencies stay separate in reports.</p></div>
+              <div class="field full"><label for="notes">Notes or follow-up <span class="optional">optional</span></label><textarea id="notes" name="notes" maxlength="1000" rows="2" placeholder="What happened, or what will you try next time?"></textarea></div>
+            </div>
+          </fieldset>
+          <div class="notice error" id="form-error" hidden role="alert"></div>
+          <div class="form-actions"><button class="button primary" id="save-entry" type="submit"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="m4 9 3 3 7-7"/></svg><span id="save-label">Save daily entry</span></button><button class="text-button" type="button" id="cancel-edit" hidden>Cancel editing</button><p class="hint">Saved locally on this computer.<br>Your entries are separate from the sales experiment.</p></div>
+        </form>
+      </article>
+      <aside class="entry-aside">
+        <div class="card side-card"><h3>A small habit. Better information.</h3><p>Record what actually happened at closing. The weekly view will help you spot patterns worth discussing with your team.</p>
+          <div class="step"><span class="step-number">01</span><div><h4>Keep the outcomes separate</h4><p>Donated, carried-forward, and sold items are not recorded as discarded food.</p></div></div>
+          <div class="step"><span class="step-number">02</span><div><h4>Note when the shelf was empty</h4><p>A sellout before closing can explain why sales alone may not show all customer demand.</p></div></div>
+          <div class="step"><span class="step-number">03</span><div><h4>Give production waste its own record</h4><p>Log dough and preparation waste in kilograms, separate from finished-product item counts.</p></div></div>
+          <div class="key"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>One local database. No account needed.</div>
+        </div>
+        <div class="side-note"><h3>What the cost means</h3><p>Estimated discarded-product cost is the discarded quantity multiplied by your entered production cost. Missing costs stay unknown. These totals do not claim lost revenue or savings already achieved.</p></div>
+      </aside>
+    </section>
+    <section id="import" aria-labelledby="import-heading">
+      <div class="section-heading"><div><div class="eyebrow">BRING YOUR HISTORY.</div><h2 id="import-heading">Start with the records you have.</h2><p>Preview a CSV, resolve any issues, then save its entries together.</p></div></div>
+      <div class="import-layout">
+        <article class="card import-card">
+          <h3>Import daily records</h3><p>Use the template's column names, or import a weekly CSV exported from Bakery Lab. Existing daily records are never overwritten.</p>
+          <div class="file-select"><label for="import-file">Choose CSV</label><input type="file" id="import-file" accept=".csv,text/csv" aria-describedby="import-file-help"><p class="hint" id="import-file-help">UTF-8, comma-separated CSV · up to 2 MB and 2,000 rows. Choosing a file does not save records.</p></div>
+          <div class="import-links"><a href="/api/import-template.csv" id="import-template">Download blank template</a><a href="/api/import-example.csv" id="import-example">Download fictional example CSV</a></div>
+          <div class="import-actions"><button class="button primary" type="button" id="preview-import" disabled>Preview import</button><span class="hint" id="import-file-status" aria-live="polite">Choose a CSV to begin.</span></div>
+          <div class="notice error import-result" id="import-error" hidden role="alert"></div>
+          <div class="status import-result" id="import-success" hidden role="status" aria-live="polite"></div>
+        </article>
+        <aside class="import-guide"><h3>Check first. Save once.</h3><ol><li>Use one row per product or material, store and date.</li><li>Keep finished-product items separate from production kilograms.</li><li>Review every issue in the preview. All rows must pass before saving.</li><li>Confirm the import. It saves the whole file together or no rows at all.</li></ol><details><summary>Columns and values</summary><p>Required for every row: <code>record_date</code> as YYYY-MM-DD, <code>store</code>, <code>product</code> and <code>kind</code>.</p><p>Use <code>finished_product</code> with <code>produced</code> and <code>sold</code>, or <code>production_waste</code> with <code>waste_kg</code>. Leave fields for the other type blank.</p><p>Use the app's reason codes, such as <code>overproduction</code>, <code>damage</code> or <code>preparation_error</code>. Dates, quantities, costs and reconciliation are checked by the same rules as the daily form.</p><p>The example file contains fictional records for learning. Import it only when you want example records in your local log.</p></details></aside>
+      </div>
+      <article class="card import-preview" id="import-preview" hidden aria-labelledby="import-preview-title">
+        <div class="import-preview-head"><div><h3 id="import-preview-title">Review the file</h3><p id="import-preview-summary"></p></div><span class="tag" id="import-preview-badge"></span></div>
+        <div class="import-errors" id="import-validation-errors" hidden role="alert"></div>
+        <div class="table-scroll"><table><caption class="sr-only">Preview of the selected CSV records. No records have been saved yet.</caption><thead><tr><th scope="col">Row</th><th scope="col">Date / store</th><th scope="col">Product or material</th><th scope="col">Type / quantities</th><th scope="col">Check</th></tr></thead><tbody id="import-preview-body"></tbody></table></div>
+        <div class="import-footer"><p id="import-preview-footnote">Review the preview before saving.</p><button class="button primary" id="commit-import" type="button" disabled>Save entries</button></div>
+      </article>
+    </section>
+    <section id="report" aria-labelledby="report-heading">
+      <div class="section-heading"><div><div class="eyebrow">REVIEW THE WEEK.</div><h2 id="report-heading">Find the recurring patterns.</h2><p>Actual records for a Monday-to-Sunday week.</p></div><span class="tag" id="entry-count">No entries loaded</span></div>
+      <div class="report-toolbar">
+        <div class="field"><label for="report-week">Week containing</label><div class="week-controls"><button class="arrow" id="previous-week" type="button" aria-label="Previous week">‹</button><input id="report-week" type="date" required><button class="arrow" id="next-week" type="button" aria-label="Next week">›</button></div></div>
+        <div class="field store-filter"><label for="report-store">Store filter <span class="optional">optional</span></label><input id="report-store" list="stores-list" placeholder="All stores" maxlength="80"></div>
+        <button class="button" id="refresh-report" type="button">Refresh report</button>
+        <a class="button" id="export-csv" href="/api/export.csv">Export CSV</a>
+      </div>
+      <p class="report-range" id="report-range">Choose a week to review its entries.</p>
+      <div class="notice error" id="report-error" hidden role="alert"></div>
+      <div class="empty report-empty" id="report-empty" hidden><strong>Your first week starts with one entry.</strong>Save a daily product or production-waste record above. It will appear here, with no example data mixed in.</div>
+      <article class="card comparison-card" id="week-comparison" hidden aria-labelledby="comparison-heading">
+        <div class="comparison-heading"><div><h3 id="comparison-heading">Change in recorded totals</h3><p>The selected week compared with the previous calendar week, using the same store filter.</p></div><span class="tag" id="comparison-status"></span></div>
+        <div class="comparison-coverage"><div class="coverage-box"><span>Previous week</span><strong id="comparison-previous-range"></strong><span id="comparison-previous-coverage"></span></div><div class="coverage-box"><span>Selected week</span><strong id="comparison-current-range"></strong><span id="comparison-current-coverage"></span></div></div>
+        <div class="table-scroll"><table class="comparison-table"><caption class="sr-only">Previous and selected week recorded totals with separate item, kilogram, and sellout measurements</caption><thead><tr><th scope="col">Recorded measure</th><th scope="col">Previous week</th><th scope="col">Selected week</th><th scope="col">Change</th></tr></thead><tbody id="comparison-body"></tbody></table></div>
+        <p class="comparison-note" id="comparison-note"></p>
+      </article>
+      <div id="report-body">
+        <div class="metrics">
+          <article class="card metric"><div class="label">Finished products sold</div><div class="value" id="sold-total">—</div><div class="caption">Item counts, including discounted sales</div></article>
+          <article class="card metric"><div class="label">Finished products discarded</div><div class="value" id="discarded-total">—</div><div class="caption">Items only · donations excluded</div></article>
+          <article class="card metric production"><div class="label">Production waste</div><div class="value" id="production-total">—</div><div class="caption">Kilograms · separate from item counts</div></article>
+          <article class="card metric"><div class="label">Sellouts before closing</div><div class="value" id="early-sellout-total">—</div><div class="caption" id="sellout-caption">Requires both same-day times</div></article>
+        </div>
+        <div class="report-grid">
+          <article class="card report-card"><h3>Recorded discarded-food cost</h3><p>Only entries with a production cost are included.</p><div class="cost-list" id="cost-list"></div><p class="cost-note" id="cost-note"></p></article>
+          <article class="card report-card"><h3>Sellout notes</h3><p>Signals to investigate, rather than estimates of unmet sales.</p><div id="sellout-list" class="mini-list"></div></article>
+        </div>
+        <article class="card" id="reasons-card"><div class="table-head"><div><h3>Reasons behind recorded waste</h3><p>Finished-product items and production kilograms remain separate.</p></div></div><div id="reasons-list"></div></article>
+      </div>
+        <article class="card" style="margin-top:19px"><div class="table-head"><div><h3>Behind the weekly report</h3><p>Edit a record to correct it, or archive it to exclude it from the report.</p></div><label class="archive-toggle" for="show-archived"><input type="checkbox" id="show-archived">Show archived entries</label></div><div class="table-scroll"><table><caption class="sr-only">Daily finished-product and production-waste records for the selected week</caption><thead><tr><th scope="col">Date / store</th><th scope="col">Product or material</th><th scope="col">Type</th><th scope="col">Discarded</th><th scope="col">Sellout time</th><th scope="col">Actions</th></tr></thead><tbody id="entries-body"></tbody></table></div><p class="table-note">Archived entries can be restored and never contribute to the report. The report reflects only recorded entries, not a complete inventory audit.</p></article>
+    </section>
+    <footer class="footer"><span>bakery lab / Measure carefully. Improve one step at a time.</span><span>Local records · Real quantities · No automatic production advice</span></footer>
+  </main>
+  <datalist id="stores-list"></datalist>
+  <noscript>This page needs JavaScript to save daily entries and show reports. Run python serve.py, then open the local page in your browser.</noscript>
+  <script>
+    'use strict';
+    const $ = function(id) { return document.getElementById(id); };
+    const state = {kind:'finished_product', editing:null, online:false, busy:false, report:null, reportSequence:0, stores:new Set()};
+    const importState = {fileText:null,fileName:'',preview:null,busy:false,sequence:0};
+    const reasonLabels = {overproduction:'Overproduction',low_demand:'Low demand',damage:'Damage',expiry:'Expired shelf life',preparation_error:'Preparation error',other:'Other'};
+    const countFields = ['opening_stock','produced','sold','discounted_sold','donated','discarded','closing_stock'];
+    const fieldIds = {record_date:'record-date',store:'store',product:'product',opening_stock:'opening-stock',produced:'produced',sold:'sold',discounted_sold:'discounted-sold',donated:'donated',discarded:'discarded',closing_stock:'closing-stock',sold_out_at:'sold-out-at',closing_time:'closing-time',waste_kg:'waste-kg',reason:'reason',unit_cost:'unit-cost',currency:'currency',notes:'notes'};
+    const num = function(value, decimals) { return Number(value || 0).toLocaleString(undefined,{maximumFractionDigits:decimals === undefined ? 0 : decimals}); };
+    const dateText = function(value) { return value ? new Date(value+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}) : '—'; };
+    function node(tag, text, className) {
+      const element = document.createElement(tag);
+      if(text !== undefined && text !== null) element.textContent = String(text);
+      if(className) element.className = className;
+      return element;
+    }
+    function emptyMessage(title, message, compact) {
+      const box = node('div',undefined,'empty'+(compact?' small':''));
+      box.append(node('strong',title),node('span',message));
+      return box;
+    }
+    function showError(id, message) {
+      const box = $(id); box.textContent = message || ''; box.hidden = !message;
+    }
+    function setStatus(message, actionLabel, action) {
+      const box = $('status'); box.replaceChildren(node('span',message)); box.hidden = false;
+      if(actionLabel && action) {
+        const button = node('button',actionLabel); button.type = 'button';
+        button.addEventListener('click',action); box.append(button);
+      }
+    }
+    async function api(path, method, payload) {
+      const options = {method:method || 'GET',headers:{Accept:'application/json'}};
+      if(payload !== undefined) {options.headers['Content-Type']='application/json'; options.body=JSON.stringify(payload);}
+      const response = await fetch(path, options);
+      let result;
+      try {result=await response.json();} catch(error) {throw new Error('The local app did not return a valid response. Restart python serve.py and try again.');}
+      if(!response.ok) {const error=new Error(result.error || 'The request could not be completed.');error.status=response.status;throw error;}
+      return result;
+    }
+    function resetImportPreview() {
+      importState.preview=null;
+      $('import-preview').hidden=true;
+      $('import-preview-body').replaceChildren();
+      $('import-validation-errors').replaceChildren();
+      $('import-validation-errors').hidden=true;
+      updateImportControls();
+    }
+    function updateImportControls() {
+      const unavailable=importState.busy || !state.online;
+      $('import-file').disabled=unavailable;
+      $('preview-import').disabled=unavailable || !importState.fileText;
+      $('preview-import').textContent=importState.busy?'Checking…':'Preview import';
+      const preview=importState.preview;
+      const ready=preview && preview.valid===true && typeof preview.preview_token==='string' && preview.preview_token.length>0 && Number(preview.row_count)>0 && Number(preview.ready_count)===Number(preview.row_count);
+      $('commit-import').disabled=unavailable || !ready;
+      $('commit-import').textContent=importState.busy?'Please wait…':ready?'Save '+num(preview.ready_count)+' '+(Number(preview.ready_count)===1?'entry':'entries'):'Save entries';
+    }
+    async function selectImportFile() {
+      const sequence=++importState.sequence;
+      importState.fileText=null;importState.fileName='';
+      resetImportPreview();showError('import-error','');$('import-success').hidden=true;
+      const file=$('import-file').files[0];
+      if(!file) {$('import-file-status').textContent='Choose a CSV to begin.';return;}
+      importState.fileName=file.name;
+      if(file.size>2*1024*1024) {showError('import-error','This file is larger than 2 MB. Split it into smaller CSV files and try again.');$('import-file-status').textContent='File is too large.';return;}
+      if(file.size===0) {showError('import-error','This file is empty. Add a header and at least one daily record.');$('import-file-status').textContent='File is empty.';return;}
+      $('import-file-status').textContent='Reading '+file.name+'…';
+      try {
+        const buffer=await file.arrayBuffer();
+        const text=new TextDecoder('utf-8',{fatal:true}).decode(buffer);
+        if(sequence!==importState.sequence) return;
+        importState.fileText=text;
+        $('import-file-status').textContent=file.name+' · '+num(file.size/1024,1)+' KB · ready to preview';
+      } catch(error) {
+        if(sequence!==importState.sequence) return;
+        showError('import-error','This file could not be read as UTF-8 text. Save it as a UTF-8 CSV and choose it again.');
+        $('import-file-status').textContent='Choose a UTF-8 CSV.';
+      }
+      updateImportControls();
+    }
+    function renderImportPreview(preview) {
+      $('import-preview').hidden=false;
+      const total=Number(preview.row_count || 0),ready=Number(preview.ready_count || 0),valid=preview.valid===true;
+      $('import-preview-summary').textContent=num(total)+' '+(total===1?'row':'rows')+' checked · '+num(ready)+' ready'+(preview.date_start?' · '+dateText(preview.date_start)+' – '+dateText(preview.date_end):'');
+      $('import-preview-badge').textContent=valid?'Ready for your confirmation':'Resolve the issues below';
+      $('import-preview-badge').classList.toggle('import-tag-invalid',!valid);
+      const errors=preview.errors || [],errorBox=$('import-validation-errors');errorBox.replaceChildren();errorBox.hidden=!errors.length;
+      if(errors.length) {
+        errorBox.append(node('strong','No records have been saved. Correct these issues and preview the file again.'));
+        const list=node('ul');errors.forEach(function(error){list.append(node('li',(error.row!==null && error.row!==undefined?'Row '+error.row+': ':'')+error.message));});errorBox.append(list);
+      }
+      const body=$('import-preview-body');body.replaceChildren();
+      const rows=preview.rows || [];
+      rows.slice(0,20).forEach(function(row){
+        const entry=row.entry || {},tr=node('tr'),dateCell=node('td'),productCell=node('td',entry.product || '—','preview-product'),quantityCell=node('td'),checkCell=node('td',row.status==='ready'?'Ready':row.message || 'Needs correction','preview-status');
+        if(row.status!=='ready') tr.className='import-row-error';
+        dateCell.append(node('strong',entry.record_date?dateText(entry.record_date):'—'),node('span',entry.store || '—','sub'));
+        if(entry.kind==='production_waste') quantityCell.append(node('span','Production waste','pill production-pill'),node('span',num(entry.waste_kg,3)+' kg','sub'));
+        else if(entry.kind==='finished_product') quantityCell.append(node('span','Finished product','pill'),node('span',num(entry.produced)+' baked · '+num(entry.sold)+' sold · '+num(entry.discarded)+' discarded','sub'));
+        else quantityCell.textContent='—';
+        tr.append(node('td',row.row),dateCell,productCell,quantityCell,checkCell);body.append(tr);
+      });
+      if(!rows.length) {const row=node('tr'),cell=node('td','No records available to preview.');cell.colSpan=5;row.append(cell);body.append(row);}
+      $('import-preview-footnote').textContent=(rows.length>20?'Showing the first 20 of '+num(rows.length)+' rows. ':'')+'All rows must pass validation. Saving adds new records only; it does not replace existing daily entries.';
+      updateImportControls();
+    }
+    async function previewImport() {
+      if(importState.busy || !state.online || !importState.fileText) return;
+      const sequence=++importState.sequence;importState.busy=true;resetImportPreview();showError('import-error','');$('import-success').hidden=true;updateImportControls();
+      try {
+        const preview=await api('/api/import/preview','POST',{csv_text:importState.fileText});
+        if(sequence!==importState.sequence) return;
+        importState.preview=preview;renderImportPreview(preview);
+      } catch(error) {
+        if(sequence===importState.sequence) showError('import-error','The preview could not be completed. '+error.message);
+      } finally {
+        if(sequence===importState.sequence) {importState.busy=false;updateImportControls();}
+      }
+    }
+    async function commitImport() {
+      const preview=importState.preview;
+      if(importState.busy || !state.online || !preview || preview.valid!==true || !preview.preview_token || !importState.fileText) return;
+      importState.busy=true;updateImportControls();showError('import-error','');
+      try {
+        const result=await api('/api/import/commit','POST',{csv_text:importState.fileText,preview_token:preview.preview_token});
+        const count=Number(result.imported_count || 0);
+        $('import-success').textContent='Saved '+num(count)+' '+(count===1?'entry':'entries')+' from '+importState.fileName+'. The report is set to the latest imported week.';$('import-success').hidden=false;
+        if(result.date_end) $('report-week').value=result.date_end;
+        $('report-store').value='';
+        (result.entries || []).forEach(function(entry){if(entry.store) state.stores.add(entry.store);});
+        importState.sequence++;importState.fileText=null;importState.fileName='';$('import-file').value='';$('import-file-status').textContent='Import complete. Choose another CSV when needed.';resetImportPreview();
+        await refreshReport();
+      } catch(error) {
+        const knownRejected=error.status===400 || error.status===409;
+        resetImportPreview();
+        showError('import-error',(knownRejected?'No records were imported. ':'The import could not be confirmed. ')+error.message+' Preview the file again to check its rows and existing records before retrying.');
+      } finally {importState.busy=false;updateImportControls();}
+    }
+    function renderComparison(report) {
+      const comparison=report.comparison,card=$('week-comparison');
+      if(!comparison) {card.hidden=true;return;}card.hidden=false;
+      const currentCount=Number(comparison.current_entry_count || 0),previousCount=Number(comparison.previous_entry_count || 0),both=currentCount>0 && previousCount>0;
+      $('comparison-status').textContent=!previousCount?'No earlier records':!currentCount?'No selected-week records':comparison.comparable===false?'Different recording coverage':'Both weeks have records';
+      $('comparison-previous-range').textContent=dateText(comparison.previous_week_start)+' – '+dateText(comparison.previous_week_end);
+      $('comparison-current-range').textContent=dateText(report.week_start)+' – '+dateText(report.week_end);
+      $('comparison-previous-coverage').textContent=num(previousCount)+' '+(previousCount===1?'entry':'entries')+' across '+num(comparison.previous_days)+' '+(Number(comparison.previous_days)===1?'recorded date':'recorded dates');
+      $('comparison-current-coverage').textContent=num(currentCount)+' '+(currentCount===1?'entry':'entries')+' across '+num(comparison.current_days)+' '+(Number(comparison.current_days)===1?'recorded date':'recorded dates');
+      const specs=[['finished_discarded','Finished products discarded','items',0],['production_waste_kg','Production waste','kg',3],['early_sellout_entries','Recorded sellouts before closing','records',0]],body=$('comparison-body');body.replaceChildren();
+      specs.forEach(function(spec){
+        const metric=(comparison.metrics || {})[spec[0]] || {},tr=node('tr'),current=Number(metric.current),previous=Number(metric.previous),change=Number(metric.change);
+        const currentRecords=metric.current_records===undefined?currentCount:Number(metric.current_records),previousRecords=metric.previous_records===undefined?previousCount:Number(metric.previous_records),metricComparable=both && currentRecords>0 && previousRecords>0 && metric.comparable!==false;
+        const unit=function(value){return Math.abs(value)===1 && spec[2]!=='kg'?spec[2].slice(0,-1):spec[2];};
+        const present=function(value,count){return count>0 && Number.isFinite(value)?num(value,spec[3])+' '+unit(value):'No records';};
+        let difference='—';
+        if(metricComparable && Number.isFinite(change)) {
+          difference=change===0?'No change':(change>0?'+':'−')+num(Math.abs(change),spec[3])+' '+unit(change);
+          if(comparison.comparable!==false && typeof metric.change_pct==='number' && Number.isFinite(metric.change_pct)) difference+=' ('+(metric.change_pct>0?'+':metric.change_pct<0?'−':'')+num(Math.abs(metric.change_pct),1)+'%)';
+        }
+        tr.append(node('td',spec[1]),node('td',present(previous,previousRecords)),node('td',present(current,currentRecords)),node('td',difference,'change-value'));body.append(tr);
+      });
+      $('comparison-note').textContent=comparison.note || 'These are changes in recorded totals, not a measure of food saved. Recording coverage, production and sales can differ between weeks.';
+    }
+    function setBusy(busy) {
+      state.busy = busy;
+      $('save-entry').disabled = busy || !state.online;
+      $('save-label').textContent = busy ? 'Saving…' : state.editing ? 'Save changes' : 'Save daily entry';
+      $('cancel-edit').disabled = busy;
+      $('finished-tab').disabled = busy;
+      $('production-tab').disabled = busy;
+      $('entry-form').setAttribute('aria-busy',String(busy));
+    }
+    function selectKind(kind) {
+      state.kind = kind;
+      const finished = kind === 'finished_product';
+      $('finished-fields').hidden = !finished;
+      $('finished-fields').disabled = !finished;
+      $('production-fields').hidden = finished;
+      $('production-fields').disabled = finished;
+      $('finished-tab').setAttribute('aria-pressed',String(finished));
+      $('production-tab').setAttribute('aria-pressed',String(!finished));
+      $('product-label').textContent = finished ? 'Product' : 'Material or failed batch';
+      $('product').placeholder = finished ? 'e.g. Croissant' : 'e.g. Excess pie dough';
+      $('product-hint').textContent = finished ? 'Use the same product name each day so the reports stay consistent.' : 'Name the material you weighed, using the same name for future records.';
+      $('cost-label').textContent = finished ? 'Production cost per item' : 'Production cost per kg';
+      updateValidation();
+    }
+    function updateValidation() {
+      const available = Number($('opening-stock').value || 0)+Number($('produced').value || 0);
+      const accounted = ['sold','donated','discarded','closing-stock'].reduce(function(total,id){return total+Number($(id).value || 0);},0);
+      const difference = available-accounted;
+      const box = $('reconciliation');
+      box.classList.toggle('invalid',difference !== 0);
+      box.replaceChildren(node('strong',difference === 0 ? 'All items accounted for' : difference > 0 ? num(difference)+' items still need an outcome' : num(Math.abs(difference))+' more items recorded than available'),node('span','Opening stock + baked = sold + donated + discarded + closing stock.'));
+      const wastePresent = state.kind === 'production_waste' || Number($('discarded').value || 0)>0;
+      $('reason').required = wastePresent;
+      $('reason-note').textContent = wastePresent ? 'required for recorded waste' : 'optional when nothing was discarded';
+      $('currency').required = $('unit-cost').value.trim() !== '';
+    }
+    function readPayload() {
+      const payload = {kind:state.kind};
+      ['record_date','store','product','reason','notes','unit_cost','currency'].forEach(function(name){payload[name]=$(fieldIds[name]).value.trim();});
+      payload.currency = payload.currency.toUpperCase();
+      if(payload.unit_cost === '') payload.unit_cost = null;
+      if(state.kind === 'finished_product') {
+        countFields.forEach(function(name){payload[name]=Number($(fieldIds[name]).value || 0);});
+        payload.sold_out_at = $('sold-out-at').value || null;
+        payload.closing_time = $('closing-time').value || null;
+        if(payload.discounted_sold > payload.sold) throw new Error('Discounted sales must be included in Sold and cannot be higher than Sold.');
+        if(payload.opening_stock+payload.produced !== payload.sold+payload.donated+payload.discarded+payload.closing_stock) throw new Error('The item counts do not balance. Give every available item a recorded outcome before saving.');
+        if(payload.sold_out_at && payload.closing_stock > 0) throw new Error('A final sellout time needs zero closing stock. Check the time or closing-stock count.');
+      } else payload.waste_kg = $('waste-kg').value.trim();
+      if(state.editing) payload.revision = state.editing.revision;
+      return payload;
+    }
+    function resetForm(keepDateAndStore) {
+      const oldDate = $('record-date').value, oldStore = $('store').value;
+      $('entry-form').reset(); state.editing = null;
+      if(keepDateAndStore) {$('record-date').value=oldDate; $('store').value=oldStore;}
+      else if(state.today) $('record-date').value=state.today;
+      selectKind('finished_product');
+      $('form-title').textContent='New daily entry'; $('form-mode').textContent='Not yet saved';
+      $('cancel-edit').hidden=true; showError('form-error',''); setBusy(false);
+    }
+    function updateStoreSuggestions(entries) {
+      entries.forEach(function(entry){if(entry.store) state.stores.add(entry.store);});
+      $('stores-list').replaceChildren();
+      Array.from(state.stores).sort().forEach(function(store){const option=node('option');option.value=store;$('stores-list').append(option);});
+    }
+    function queryString() {
+      const params = new URLSearchParams();
+      if($('report-week').value) params.set('week',$('report-week').value);
+      const store=$('report-store').value.trim(); if(store) params.set('store',store);
+      return '?'+params.toString();
+    }
+    async function refreshReport() {
+      if(!state.online) return;
+      const sequence=++state.reportSequence;
+      $('refresh-report').disabled=true; $('refresh-report').textContent='Loading…';
+      showError('report-error','');
+      try {
+        const report=await api('/api/report'+queryString());
+        if(sequence !== state.reportSequence) return;
+        state.report=report; renderReport(report);
+        $('export-csv').href='/api/export.csv'+queryString();
+      } catch(error) {
+        if(sequence === state.reportSequence) showError('report-error',error.message);
+      } finally {
+        if(sequence === state.reportSequence) {$('refresh-report').disabled=false;$('refresh-report').textContent='Refresh report';}
+      }
+    }
+    function renderCosts(report) {
+      const list=$('cost-list'); list.replaceChildren();
+      if(!(report.costs || []).length) list.append(emptyMessage('No costs recorded','Add a known production cost to a waste entry to include it here.',true));
+      (report.costs || []).forEach(function(cost){
+        const row=node('div',undefined,'cost-row');
+        row.append(node('span',cost.currency),node('strong',Number(cost.estimated_cost || 0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})));
+        list.append(row);
+      });
+      const missing=Number(report.uncosted_waste_entries || 0);
+      $('cost-note').textContent=missing ? num(missing)+' waste '+(missing===1?'entry has':'entries have')+' no production cost and are excluded. Missing costs are not treated as zero.' : 'Cost totals use only the values you entered. Currency totals are never converted or added together.';
+      $('cost-note').classList.toggle('warning',missing>0);
+    }
+    function renderSellouts(report) {
+      const list=$('sellout-list'); list.replaceChildren();
+      const rows=report.sellouts || [];
+      if(!rows.length) {list.append(emptyMessage('No sellout times recorded','This means the timing is unknown, rather than proof that every product stayed available.',true));return;}
+      rows.forEach(function(row){
+        const item=node('div',undefined,'mini-row');
+        item.append(node('strong',row.product+' · '+row.sold_out_at));
+        const timing=row.early === true ? 'Before closing at '+row.closing_time : row.early === false ? 'Not before the recorded closing time' : 'Closing time not recorded';
+        item.append(node('span',dateText(row.record_date)+' · '+row.store+' · '+timing));
+        list.append(item);
+      });
+    }
+    function renderReasons(report) {
+      const box=$('reasons-list'); box.replaceChildren();
+      const rows=report.reasons || [];
+      if(!rows.length) {const empty=emptyMessage('No waste reasons recorded','Reasons appear here when a record includes discarded items or production waste.',true);empty.style.margin='0 23px 20px';box.append(empty);return;}
+      const wrap=node('div',undefined,'table-scroll'),table=node('table'),head=node('thead'),headRow=node('tr');
+      ['Reason','Waste stream','Finished items','Production kg'].forEach(function(label){const cell=node('th',label);cell.scope='col';headRow.append(cell);});
+      head.append(headRow);table.append(head);const body=node('tbody');
+      rows.forEach(function(row){const tr=node('tr');tr.append(node('td',reasonLabels[row.reason] || row.reason || 'Not specified'),node('td',row.kind==='production_waste'?'Production':'Finished products'),node('td',row.kind==='production_waste'?'—':num(row.discarded_items)),node('td',row.kind==='production_waste'?num(row.production_waste_kg,3):'—'));body.append(tr);});
+      table.append(body);wrap.append(table);box.append(wrap);
+    }
+    function editEntry(entry) {
+      if(state.busy) return;
+      resetForm(false);
+      state.editing={id:entry.id,revision:entry.revision};
+      Object.keys(fieldIds).forEach(function(name){if(entry[name]!==undefined && entry[name]!==null) $(fieldIds[name]).value=entry[name];});
+      selectKind(entry.kind);
+      $('form-title').textContent='Edit daily entry';$('form-mode').textContent='Editing saved record';
+      $('save-label').textContent='Save changes';$('cancel-edit').hidden=false;
+      $('entry-form').scrollIntoView({behavior:'smooth',block:'start'});$('product').focus({preventScroll:true});
+      setStatus('Editing '+entry.product+' for '+dateText(entry.record_date)+'. Save changes when you are ready.');
+    }
+    async function archiveEntry(entry, button) {
+      if(state.busy) return;
+      button.disabled=true;
+      try {
+        const result=await api('/api/entries/'+encodeURIComponent(entry.id),'DELETE',{revision:entry.revision});
+        const archived=result.entry;
+        if(state.editing && state.editing.id===entry.id) resetForm(true);
+        setStatus('Archived '+entry.product+'. It is excluded from the report.', 'Undo archive', async function(){
+          try {await api('/api/entries/'+encodeURIComponent(archived.id)+'/restore','POST',{revision:archived.revision});setStatus('Entry restored.');await refreshReport();}
+          catch(error){setStatus('Could not restore this entry: '+error.message);}
+        });
+        await refreshReport();
+      } catch(error) {setStatus('Could not archive this entry: '+error.message);button.disabled=false;}
+    }
+    async function restoreEntry(entry, button) {
+      if(state.busy) return;
+      button.disabled=true;
+      try {
+        await api('/api/entries/'+encodeURIComponent(entry.id)+'/restore','POST',{revision:entry.revision});
+        setStatus('Restored '+entry.product+'. It is included in the report again.');
+        await refreshReport();
+      } catch(error) {setStatus('Could not restore this entry: '+error.message);button.disabled=false;}
+    }
+    async function refreshEntries() {
+      const report=state.report;
+      if(!report) return;
+      if(!$('show-archived').checked) {renderEntries(report.entries || []);return;}
+      const sequence=state.reportSequence;
+      try {
+        const response=await api('/api/entries'+queryString()+'&include_archived=1');
+        if(sequence!==state.reportSequence || !$('show-archived').checked) return;
+        renderEntries(response.entries || []);
+      } catch(error) {if(sequence===state.reportSequence) showError('report-error','Could not load archived entries: '+error.message);}
+    }
+    function renderEntries(entries) {
+      const body=$('entries-body');body.replaceChildren();
+      if(!entries.length) {
+        const row=node('tr'),cell=node('td');cell.colSpan=6;
+        cell.append(emptyMessage('No records in this view','Choose another week or store, add an entry, or show archived entries.',true));row.append(cell);body.append(row);return;
+      }
+      entries.forEach(function(entry){
+        const row=node('tr'),dateCell=node('td'),productCell=node('td'),kindCell=node('td'),discardCell=node('td'),timeCell=node('td'),actionsCell=node('td');
+        if(entry.deleted) row.className='archived-row';
+        dateCell.append(node('strong',dateText(entry.record_date)),node('span',entry.store,'sub'));
+        productCell.append(node('strong',entry.product));
+        if(entry.reason) productCell.append(node('span',reasonLabels[entry.reason] || entry.reason,'sub'));
+        if(entry.deleted) productCell.append(node('span','Archived · excluded from report','archived-label'));
+        kindCell.append(node('span',entry.kind==='production_waste'?'Production':'Finished product','pill'+(entry.kind==='production_waste'?' production-pill':'')));
+        discardCell.textContent=entry.kind==='production_waste'?num(entry.waste_kg,3)+' kg':num(entry.discarded)+' items';
+        if(entry.kind==='finished_product') {
+          timeCell.append(node('span',entry.sold_out_at || 'Not recorded'));
+          if(entry.closing_time) timeCell.append(node('span','Closes '+entry.closing_time,'sub'));
+        } else timeCell.textContent='—';
+        const actions=node('div',undefined,'row-actions');
+        if(entry.deleted) {
+          const restore=node('button','Restore');restore.type='button';restore.setAttribute('aria-label','Restore '+entry.product+' on '+entry.record_date);
+          restore.addEventListener('click',function(){restoreEntry(entry,restore);});actions.append(restore);
+        } else {
+          const edit=node('button','Edit'),archive=node('button','Archive','archive');edit.type='button';archive.type='button';
+          edit.setAttribute('aria-label','Edit '+entry.product+' on '+entry.record_date);archive.setAttribute('aria-label','Archive '+entry.product+' on '+entry.record_date);
+          edit.addEventListener('click',function(){editEntry(entry);});archive.addEventListener('click',function(){archiveEntry(entry,archive);});
+          actions.append(edit,archive);
+        }
+        actionsCell.append(actions);row.append(dateCell,productCell,kindCell,discardCell,timeCell,actionsCell);body.append(row);
+      });
+    }
+    function renderReport(report) {
+      const totals=report.totals || {};
+      const count=Number(report.entry_count || 0);
+      $('entry-count').textContent=num(count)+' '+(count===1?'entry':'entries');
+      $('report-range').textContent=dateText(report.week_start)+' – '+dateText(report.week_end)+( $('report-store').value.trim() ? ' · '+$('report-store').value.trim() : ' · All stores');
+      $('sold-total').textContent=num(totals.finished_sold);
+      $('discarded-total').textContent=num(totals.finished_discarded);
+      $('production-total').textContent=num(totals.production_waste_kg,3)+' kg';
+      $('early-sellout-total').textContent=num(totals.early_sellout_entries);
+      $('sellout-caption').textContent=num(totals.sellout_entries)+' total '+(Number(totals.sellout_entries)===1?'sellout':'sellouts')+' with a time recorded';
+      $('report-empty').hidden=count>0;
+      $('report-body').hidden=count===0;
+      renderCosts(report);renderSellouts(report);renderReasons(report);renderComparison(report);refreshEntries();updateStoreSuggestions(report.entries || []);
+    }
+    async function saveEntry(event) {
+      event.preventDefault();
+      if(state.busy || !state.online) return;
+      showError('form-error','');
+      updateValidation();
+      if(!$('entry-form').reportValidity()) return;
+      let payload;
+      try {payload=readPayload();} catch(error){showError('form-error',error.message);return;}
+      const editing=Boolean(state.editing),entryId=editing?state.editing.id:null;
+      setBusy(true);
+      try {
+        const result=await api(editing?'/api/entries/'+encodeURIComponent(entryId):'/api/entries',editing?'PUT':'POST',payload);
+        $('report-week').value=payload.record_date;$('report-store').value='';
+        state.stores.add(payload.store);
+        resetForm(true);
+        setStatus((editing?'Updated ':'Saved ')+result.entry.product+' for '+dateText(result.entry.record_date)+'. The weekly report is ready below.');
+        await refreshReport();
+      } catch(error) {showError('form-error',error.message);}
+      finally {setBusy(false);}
+    }
+    function shiftWeek(delta) {
+      const value=$('report-week').value || state.today;
+      if(!value) return;
+      const date=new Date(value+'T12:00:00Z');date.setUTCDate(date.getUTCDate()+delta*7);
+      $('report-week').value=date.toISOString().slice(0,10);refreshReport();
+    }
+    function connectionMessage(message) {
+      const box=$('connection-notice');box.replaceChildren(node('strong','Start the local app to use your daily log.'),node('p',message));
+      const paragraph=node('p');paragraph.append(node('span','Open the project folder and run '),node('code','python serve.py'),node('span',', then use the local address it prints. Your sales experiment can still be viewed offline.'));
+      box.append(paragraph);box.hidden=false;
+    }
+    async function initialize() {
+      $('import-file').addEventListener('change',selectImportFile);
+      $('preview-import').addEventListener('click',previewImport);
+      $('commit-import').addEventListener('click',commitImport);
+      ['import-template','import-example'].forEach(function(id){$(id).addEventListener('click',function(event){if(!state.online){event.preventDefault();connectionMessage('CSV templates become available when the local Python app is running.');}});});
+      $('entry-form').addEventListener('submit',saveEntry);
+      $('entry-form').addEventListener('input',updateValidation);
+      $('finished-tab').addEventListener('click',function(){selectKind('finished_product');});
+      $('production-tab').addEventListener('click',function(){selectKind('production_waste');});
+      $('cancel-edit').addEventListener('click',function(){resetForm(true);setStatus('Editing cancelled. The saved record was not changed.');});
+      $('currency').addEventListener('input',function(){this.value=this.value.toUpperCase();});
+      $('previous-week').addEventListener('click',function(){shiftWeek(-1);});
+      $('next-week').addEventListener('click',function(){shiftWeek(1);});
+      $('refresh-report').addEventListener('click',refreshReport);
+      $('report-week').addEventListener('change',refreshReport);
+      $('report-store').addEventListener('change',refreshReport);
+      $('show-archived').addEventListener('change',refreshEntries);
+      $('export-csv').addEventListener('click',function(event){if(!state.online){event.preventDefault();connectionMessage('CSV exports become available when the local Python app is running.');}});
+      updateValidation();setBusy(false);updateImportControls();
+      if(location.protocol==='file:') {connectionMessage('Daily records need the local Python app so they can be saved reliably.');$('storage-badge').textContent='Local app not running';$('report-body').hidden=true;return;}
+      try {
+        const config=await api('/api/config');
+        state.today=config.today;state.online=true;
+        $('record-date').value=config.today;$('report-week').value=config.today;
+        $('storage-badge').textContent='Saved on this computer';setBusy(false);updateImportControls();
+        await refreshReport();
+      } catch(error) {
+        connectionMessage(error.message);$('storage-badge').textContent='Connection needed';$('report-body').hidden=true;
+      }
+    }
+    initialize();
+  </script>
+</body>
+</html>
