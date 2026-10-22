@@ -1,0 +1,45 @@
+name: Bug report
+description: Describe something that did not work as expected.
+title: "Bug: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use fictional examples. Do not attach real bakery records, databases, .env files, credentials, or private information. For a security vulnerability, follow SECURITY.md instead of posting details here.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: What did you do? Include the smallest fictional example needed to reproduce the problem.
+      placeholder: |
+        1. Open the daily log.
+        2. Enter these fictional quantities...
+        3. Select Save daily entry.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: What happened instead? Include the error message or a screenshot with private information removed, if useful.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Your environment
+      description: Include your operating system, Python version, browser, and Bakery Lab version or commit if known.
+      placeholder: |
+        Operating system:
+        Python version:
+        Browser:
+        Bakery Lab version or commit:
+    validations:
+      required: true
