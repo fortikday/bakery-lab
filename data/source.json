@@ -1,0 +1,25 @@
+{
+  "repository": "https://github.com/Green-AI-Hub-Mittelstand/Reduce-Foodwaste-Dataset",
+  "commit": "3bde2d0f9b256ffc800932ac8574a695909f59a5",
+  "retrieved_utc": "2026-10-21T18:41:36.457678+00:00",
+  "snapshot": "train.csv only; the original competition test and truth files are not used",
+  "license_file": "LICENSE",
+  "source_readme": "README.md",
+  "files": {
+    "train.csv": {
+      "url": "https://raw.githubusercontent.com/Green-AI-Hub-Mittelstand/Reduce-Foodwaste-Dataset/3bde2d0f9b256ffc800932ac8574a695909f59a5/train.csv",
+      "sha256": "1038b1f20317e83b29cc9f9e847ba9cbdf4146d463ceefd1623ed41041d99efc",
+      "bytes": 686709
+    },
+    "README.md": {
+      "url": "https://raw.githubusercontent.com/Green-AI-Hub-Mittelstand/Reduce-Foodwaste-Dataset/3bde2d0f9b256ffc800932ac8574a695909f59a5/README.md",
+      "sha256": "4970b6180674875bc50a360d0ffc041cb8db297336591a04364ab22da02d7e1c",
+      "bytes": 4046
+    },
+    "LICENSE": {
+      "url": "https://raw.githubusercontent.com/Green-AI-Hub-Mittelstand/Reduce-Foodwaste-Dataset/3bde2d0f9b256ffc800932ac8574a695909f59a5/LICENSE",
+      "sha256": "fc2f7d814b642aaf02db29699c408b654c29aa50a4cfa6d5aac0a2ef9378286a",
+      "bytes": 1081
+    }
+  }
+}
