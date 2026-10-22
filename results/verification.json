@@ -1,0 +1,72 @@
+{
+  "automated_tests": {
+    "passed": 105,
+    "failed": 0,
+    "forecast_checks": 7,
+    "daily_log_and_http_checks": 98,
+    "csv_import_and_comparison_checks": 44,
+    "local_calendar_checks": 3
+  },
+  "notebook": {
+    "code_cells_executed": 9,
+    "errors": 0
+  },
+  "forecast_check": {
+    "n_predictions": 448,
+    "eligible_stores": 8,
+    "baseline_mae": 0.21039531272249387,
+    "ml_mae": 0.17771845911399817,
+    "improvement_pct": 15.531169960804048
+  },
+  "notes": "Historical weekly predictions; errors measured in source scaled sales points; no claim of measured food waste reduction.",
+  "daily_log": {
+    "storage": "Local SQLite; no example records in the user database",
+    "browser_checks": [
+      "live quantity reconciliation",
+      "save finished product and production kg separately",
+      "currency cost totals",
+      "refresh persistence",
+      "edit sellout timing",
+      "archive, reload and restore",
+      "invalid CSV row shown with saving disabled",
+      "valid 20-row fictional CSV preview without writes, followed by explicit import",
+      "imported records persist after browser refresh",
+      "two-week comparison and same-store filter",
+      "missing previous-week records show unknown totals without percentages",
+      "updated user-facing import screen with empty real log"
+    ],
+    "new_log_retrains_forecast_model": false
+  },
+  "last_release_check": "2026-10-22",
+  "csv_import": {
+    "max_utf8_bytes": 2097152,
+    "max_records": 2000,
+    "preview_required": true,
+    "atomic_commit": true,
+    "duplicates_overwritten": false,
+    "format_marked_export_round_trip": true,
+    "fictional_browser_test_data": "Separate work database; not present in the user database or downloadable project"
+  },
+  "week_comparison": {
+    "period": "Selected calendar week compared with previous calendar week; same store filter",
+    "coverage_shown": [
+      "entry count",
+      "recorded dates",
+      "missing measurement streams"
+    ],
+    "claims_causal_savings": false,
+    "preview": "weekly-comparison-preview.png (fictional data)"
+  },
+  "open_source_preparation": {
+    "license": "MIT; original upstream dataset MIT notice retained separately",
+    "audited": [
+      "credentials and machine paths",
+      "notebook saved outputs",
+      "bundled data provenance",
+      "ignored local records and configuration"
+    ],
+    "notebook_display_check": "Numeric-only rounding; private-path warning removed; useful results retained",
+    "date_behavior": "Current computer local date and timezone, read dynamically",
+    "github_checks": "Workflow prepared for Python 3.11 and 3.12 on Linux and Windows; hosted results separate from local test results"
+  }
+}
