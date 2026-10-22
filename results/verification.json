@@ -1,13 +1,14 @@
 {
   "automated_tests": {
-    "passed": 134,
+    "passed": 135,
     "failed": 0,
     "forecast_checks": 7,
     "daily_log_and_http_checks": 113,
     "csv_import_and_comparison_checks": 44,
     "local_calendar_checks": 3,
     "backup_checks": 15,
-    "desktop_checks": 14
+    "desktop_checks": 14,
+    "html_form_checks": 1
   },
   "notebook": {
     "code_cells_executed": 9,
@@ -73,7 +74,7 @@
   },
   "browser_state_checks": "Node built-in harness passed; state and async handling, not layout",
   "usability_release": {
-    "version": "0.2.0",
+    "version": "0.2.1",
     "windows_portable": {
       "python_required": false,
       "architecture": "x64",
@@ -100,6 +101,23 @@
       "training on local bakery entries",
       "evidence from a real bakery pilot"
     ],
-    "forecast_experiment_changed": false
+    "forecast_experiment_changed": false,
+    "manual_checklist": {
+      "date": "2026-10-22",
+      "version": "0.2.1",
+      "data": "Separate fictional test log; no user records modified",
+      "packaged_app_started": true,
+      "launch_method": "Extracted Windows executable started with isolated database path",
+      "waste_reason_selectable": "Overproduction",
+      "test_product_saved": true,
+      "weekly_sold": 15,
+      "weekly_discarded": 5,
+      "process_restarted": true,
+      "record_persisted": true,
+      "full_backup_browser_download": true,
+      "full_backup_sqlite_integrity": "ok",
+      "full_backup_matches_saved_log_and_automatic_snapshot": true,
+      "full_backup_records": 1
+    }
   }
 }
