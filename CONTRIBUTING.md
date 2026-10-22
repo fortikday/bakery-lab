@@ -43,6 +43,11 @@ If you already activated your development environment, run `python -m pytest tes
 The first package installation requires internet access; the bundled-data tests
 run locally. Tests use temporary databases rather than your personal daily log.
 
+The browser-state checks use Node.js 18 or newer and no third-party Node
+packages. Run `node tests/test_ui_state.cjs` to check recording coverage,
+unknown measurements, backups, and delayed-response warning handling. These
+checks exercise state behaviour; they do not replace visual browser testing.
+
 If you change the forecasting analysis or dashboard template, run `python run.py`
 in that environment and review the generated results. Keep scaled sales values
 separate from real item counts and kilograms. Forecast error is not evidence of

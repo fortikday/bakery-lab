@@ -5,10 +5,16 @@ log is accessible from the same computer. It has no user accounts or separation
 between different people's data. Do not expose this server directly to the
 internet or use it as a shared hosted service.
 
-Daily records are stored in `local/waste-log.sqlite3`. Access to that file gives
-access to the records. Keep the database, backups, exports, and credentials out
-of public repositories and reports. Stop the app before copying the database
-for a complete backup.
+Source mode stores records in `local/waste-log.sqlite3`; the portable Windows
+app uses `%LOCALAPPDATA%\BakeryLab\local\waste-log.sqlite3`. Access to that file
+or a recovery copy gives access to the records. Keep databases, backups,
+exports, and credentials out of public repositories and reports.
+
+Use the app's full backup download for a consistent snapshot while it runs.
+If copying the original database manually, stop all app instances first.
+Automatic daily copies remain on the same device and do not protect against
+device loss. Recovering a full snapshot replaces the complete log, so preserve
+the current file first and follow [the bakery guide](docs/BAKERY_GUIDE.md).
 
 ## Report a vulnerability privately
 

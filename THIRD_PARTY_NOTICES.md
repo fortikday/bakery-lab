@@ -20,3 +20,22 @@ Optional Python dependencies are installed separately from their package
 registries. Their licences remain with those packages; Bakery Lab's licence
 does not replace them. No third-party JavaScript, font files, or downloaded
 image assets are bundled with the app.
+
+## Portable Windows preview
+
+The separately built Windows package includes CPython 3.12.14, SQLite 3.53.1,
+OpenSSL 3.5.8, and their Windows runtime support files. These components keep
+their upstream licences; the project MIT licence covers Bakery Lab's own code.
+The package includes the Python notice and the OpenSSL Apache 2.0 licence in
+its `licenses/` folder. Copies for this build are kept in
+`packaging/licenses/` in the source project.
+
+Python: <https://www.python.org/>. OpenSSL licence source:
+<https://github.com/openssl/openssl/blob/openssl-3.5.8/LICENSE.txt>.
+SQLite: <https://sqlite.org/copyright.html>. Microsoft runtime support files
+retain their Microsoft notices and are not relicensed by Bakery Lab.
+
+The executable is built with unmodified PyInstaller 6.22.3. Its distribution
+exception permits application bundles under their own applicable licences:
+<https://pyinstaller.org/en/stable/license.html>. Tk is excluded from this
+portable build; the optional source desktop window can use a locally installed Tk.

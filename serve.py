@@ -14,11 +14,13 @@ import io
 import json
 from pathlib import Path
 import re
+import sys
 from urllib.parse import parse_qs, urlsplit
 import webbrowser
 
 from waste_log import ConflictError, LogStore, NotFoundError
 from csv_records import CSV_FIELDS, EXPORT_FORMAT, example_csv, template_csv
+from backups import BackupManager
 
 ROOT = Path(__file__).resolve().parent
 EXPORT_FIELDS = CSV_FIELDS
@@ -43,8 +45,16 @@ def _reject_nonfinite(value):
 def make_server(db_path=None, port=8765):
     """Create a loopback-only server; port=0 is useful for isolated tests."""
     store = LogStore(db_path or ROOT / "local" / "waste-log.sqlite3")
+    backups = BackupManager(store.path, lambda: _local_now())
+    backups.refresh()
 
     class Handler(BaseHTTPRequestHandler):
+        def log_message(self, format, *args):
+            # A windowed desktop build has no stderr stream. Keep ordinary
+            # console logging without making a successful response depend on it.
+            if sys.stderr is not None and not getattr(self.server, "quiet", False):
+                super().log_message(format, *args)
+
         def _respond(self, status, body, content_type="application/json; charset=utf-8", **headers):
             if content_type.startswith("application/json"):
                 body = json.dumps(body, ensure_ascii=False, allow_nan=False).encode("utf-8")
@@ -72,6 +82,18 @@ def make_server(db_path=None, port=8765):
                 self._respond(403, {"error": "Open the daily log on the same local Bakery Lab address."})
                 return False
             return True
+
+        def _saved(self, status, payload):
+            # Data is committed before refreshing the recovery copy. Report a
+            # backup warning separately so users do not retry a successful save.
+            try:
+                backup_status = backups.refresh()
+            except Exception:
+                backup_status = backups.failure_status()
+            payload["backup"] = backup_status
+            if backup_status["last_error"]:
+                payload["backup_warning"] = "Your records were saved. " + backup_status["last_error"]
+            self._respond(status, payload)
 
         def _body(self, maximum=65536):
             if self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower() != "application/json":
@@ -114,7 +136,17 @@ def make_server(db_path=None, port=8765):
                     local_now = _local_now()
                     self._respond(200, {"today": local_now.date().isoformat(),
                                         "timezone": local_now.tzname() or str(local_now.tzinfo),
-                                        "storage": "local", "version": 3})
+                                        "storage": "local", "version": 3,
+                                        "backup": backups.status()})
+                elif path == "/api/backup.sqlite3":
+                    try:
+                        content = backups.download()
+                    except Exception:
+                        self._respond(500, {"error": "The backup could not be prepared. Your daily records have not changed. Please try again."})
+                        return
+                    today = _local_now().date().isoformat()
+                    self._respond(200, content, "application/vnd.sqlite3",
+                                  Content_Disposition=f'attachment; filename="bakery-backup-{today}.sqlite3"')
                 elif path == "/api/entries":
                     query = parse_qs(urlsplit(self.path).query)
                     self._respond(200, {"entries": store.list_entries(
@@ -143,25 +175,25 @@ def make_server(db_path=None, port=8765):
                     self._respond(404, {"error": "This page or endpoint does not exist."})
                 return
             if method == "POST" and path == "/api/entries":
-                self._respond(201, {"entry": store.create(self._body())})
+                self._saved(201, {"entry": store.create(self._body())})
                 return
             if method == "POST" and path in {"/api/import/preview", "/api/import/commit"}:
                 payload = self._body(maximum=6 * 1024 * 1024)
                 if path.endswith("/preview"):
                     self._respond(200, store.preview_import(payload.get("csv_text")))
                 else:
-                    self._respond(201, store.commit_import(payload.get("csv_text"), payload.get("preview_token")))
+                    self._saved(201, store.commit_import(payload.get("csv_text"), payload.get("preview_token")))
                 return
             match = re.fullmatch(r"/api/entries/([a-f0-9-]{36})(/restore)?", path)
             if match:
                 entry_id, restore = match.groups()
                 payload = self._body()
                 if restore and method == "POST":
-                    self._respond(200, {"entry": store.restore(entry_id, payload.get("revision"))})
+                    self._saved(200, {"entry": store.restore(entry_id, payload.get("revision"))})
                 elif not restore and method == "PUT":
-                    self._respond(200, {"entry": store.update(entry_id, payload)})
+                    self._saved(200, {"entry": store.update(entry_id, payload)})
                 elif not restore and method == "DELETE":
-                    self._respond(200, {"entry": store.archive(entry_id, payload.get("revision"))})
+                    self._saved(200, {"entry": store.archive(entry_id, payload.get("revision"))})
                 else:
                     self._respond(405, {"error": "This action is not supported."})
                 return
@@ -187,6 +219,7 @@ def make_server(db_path=None, port=8765):
 
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     server.log_store = store
+    server.backup_manager = backups
     return server
 
 

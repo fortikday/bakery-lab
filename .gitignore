@@ -27,3 +27,8 @@ local/
 Thumbs.db
 .vscode/
 .idea/
+*-backups/
+.build-venv/
+build/
+dist/
+*.exe
