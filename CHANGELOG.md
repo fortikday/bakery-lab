@@ -1,5 +1,17 @@
 # Changes
 
+## 0.2.1 — waste-reason correction
+
+- Fix the malformed HTML option that displayed Overproduction without allowing
+  it to be selected in the daily entry form.
+- Check the parsed waste-reason choices against the supported backend codes,
+  so a missing choice is caught by the automated suite.
+
+Validation: 135 Python tests passed. The rebuilt Windows app saved a fictional
+product, showed 15 sold and 5 discarded, retained it after a process restart,
+and downloaded a full backup through the browser. The native launch window
+remains untested interactively on other Windows installations.
+
 ## 0.2.0 — usability preview
 
 - Portable 64-bit Windows launcher with Python included. It opens the browser;
