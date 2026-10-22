@@ -15,7 +15,8 @@ waste savings are documented yet.
 
 ## Use the app
 
-**Portable Windows package:** extract the complete folder and double-click
+**Portable Windows package:** [download the Windows ZIP](https://github.com/fortikday/bakery-lab/releases/download/v0.2.0/BakeryLab-Windows-x64.zip),
+extract the complete folder and double-click
 `BakeryLab.exe`. This 64-bit Windows package includes Python and opens the app
 in your browser. Keep its running window open while using the app; you can
 minimize it. Close that window when finished. It also shows the data folder.
