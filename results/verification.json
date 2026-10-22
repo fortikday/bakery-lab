@@ -1,11 +1,13 @@
 {
   "automated_tests": {
-    "passed": 105,
+    "passed": 134,
     "failed": 0,
     "forecast_checks": 7,
-    "daily_log_and_http_checks": 98,
+    "daily_log_and_http_checks": 113,
     "csv_import_and_comparison_checks": 44,
-    "local_calendar_checks": 3
+    "local_calendar_checks": 3,
+    "backup_checks": 15,
+    "desktop_checks": 14
   },
   "notebook": {
     "code_cells_executed": 9,
@@ -68,5 +70,36 @@
     "notebook_display_check": "Numeric-only rounding; private-path warning removed; useful results retained",
     "date_behavior": "Current computer local date and timezone, read dynamically",
     "github_checks": "Workflow prepared for Python 3.11 and 3.12 on Linux and Windows; hosted results separate from local test results"
+  },
+  "browser_state_checks": "Node built-in harness passed; state and async handling, not layout",
+  "usability_release": {
+    "version": "0.2.0",
+    "windows_portable": {
+      "python_required": false,
+      "architecture": "x64",
+      "code_signed": false,
+      "packaged_backend_smoke_check": true,
+      "native_window_interactively_tested": false
+    },
+    "backup_browser_check": {
+      "rows": 20,
+      "data": "fictional separate QA database",
+      "sqlite_integrity": "ok"
+    },
+    "backup_features": [
+      "full database download",
+      "daily automatic snapshots",
+      "cross-instance snapshot mutex",
+      "versioned status prevents stale responses from clearing warnings"
+    ],
+    "does_not_include": [
+      "shared hosting",
+      "accounts",
+      "multi-device sync",
+      "in-app full backup restore",
+      "training on local bakery entries",
+      "evidence from a real bakery pilot"
+    ],
+    "forecast_experiment_changed": false
   }
 }
